@@ -19,4 +19,13 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ORM.Dapper\ORM.Dapper.csproj" />
+    <ProjectReference Include="..\ORM\ORM.EF.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dapper\" />
+  </ItemGroup>
+
 </Project>

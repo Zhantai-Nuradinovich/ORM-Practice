@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System;
 using Xunit;
 
-namespace ORM.Tests
+namespace ORM.Tests.EF
 {
-    public class OrderTests
+    public class ProductTests
     {
+        //It is now depends on the Database, but implemented this way to just review EF Core and Dapper
         #region CREATE
         [Fact]
-        public void Add_Order_ReturnsInsertedOrder()
+        public void Add_Product_ReturnsInsertedProduct()
         {
 
         }
@@ -21,26 +20,20 @@ namespace ORM.Tests
         #endregion
         #region READ
         [Fact]
-        public void GetAll_GetOrders_ReturnsAllOrders()
+        public void GetAll_GetProducts_ReturnsAllProducts()
         {
 
         }
 
         [Fact]
-        public void Get_GetOrderById_ReturnsOrder()
-        {
-
-        }
-
-        [Fact]
-        public void GetAll_GetFilteredOrders_ReturnsFilteredOrders()
+        public void Get_GetProductById_ReturnsProduct()
         {
 
         }
         #endregion
         #region UPDATE
         [Fact]
-        public void Update_Order_ReturnsUpdatedOrder()
+        public void Update_Product_ReturnsUpdatedProduct()
         {
 
         }
@@ -52,23 +45,17 @@ namespace ORM.Tests
         #endregion
         #region DELETE
         [Fact]
-        public void Delete_Order_ReturnsTrue()
+        public void Delete_Product_ReturnsTrue()
         {
 
         }
         [Fact]
-        public void Delete_DeletedOrder_ReturnsFalse()
+        public void Delete_DeletedProduct_ReturnsFalse()
         {
 
         }
         [Fact]
         public void Delete_Null_ThrowsArgumentNullException()
-        {
-
-        }
-
-        [Fact]
-        public void DeleteAll_DeletesInBulk_ReturnsTrue()
         {
 
         }
