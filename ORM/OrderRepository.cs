@@ -1,57 +1,48 @@
 ﻿using Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ORM.EF
 {
-    public class OrderRepository : IOrderRepository, IDisposable
+    public class OrderRepository : Repository<Order>
     {
-        ApplicationDbContext _context;
-        public OrderRepository()
+        public OrderRepository(ApplicationDbContext context) : base(context)
+        { }
+
+        public override Task Add(Order Item)
         {
-            _context = DbContextCreator.GetDbContext();
-        }
-        public Task<int> Add(Order Item)
-        {
-            throw new NotImplementedException();
+            if (Item == null)
+                throw new ArgumentNullException();
+
+            return base.Add(Item);
         }
 
-        public Task<bool> Delete(int PrimaryKey)
+        public Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            var order = GetById(id).Result;
+            if (order == null)
+                throw new ArgumentNullException();
+
+            return base.Delete(order);
         }
 
-        public Task<bool> DeleteAll(Expression<Func<Order, bool>> predicate)
+        public async Task DeleteAll(Expression<Func<Order, bool>> predicate)
         {
-            throw new NotImplementedException();
+            var orders = await Get(predicate);
+            Context.Orders.RemoveRange(orders);
+            await Context.SaveChangesAsync();
         }
 
-        public void Dispose()
+        public override Task<bool> Save(Order Item)
         {
-            _context.Dispose();
-        }
-
-        public Task<List<Order>> Get(Expression<Func<Order, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<Order>> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Order> GetById(int Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Save(Order Item)
-        {
-            throw new NotImplementedException();
+            if (Item == null)
+                throw new ArgumentNullException();
+            
+            return base.Save(Item);
         }
     }
 }

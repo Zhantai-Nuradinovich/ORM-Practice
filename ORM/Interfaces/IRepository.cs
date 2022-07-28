@@ -10,10 +10,10 @@ namespace ORM.EF
     public interface IRepository<T> where T : Entity
     {
         Task<List<T>> GetAll();
-        Task<T> GetById(int Id);
+        Task<T> GetById(int id);
         Task<List<T>> Get(Expression<Func<T, bool>> predicate);
-        Task<bool> Save(T Item);
-        Task<int> Add(T Item);
-        Task<bool> Delete(int PrimaryKey);
+        Task<bool> Save(T item);
+        Task Add(T item);
+        Task<bool> Delete(T item);
     }
 }
