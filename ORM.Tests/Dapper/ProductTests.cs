@@ -12,7 +12,7 @@ namespace ORM.Tests.Dapper
         [Fact]
         public async Task Add_Product_ReturnsInsertedProductAsync()
         {
-            string databaseName = "Data Source=OrmDapper.sqlite";
+            string databaseName = "Data Source=AddProducts.sqlite";
             Helper.Setup(databaseName);
             var pRepo = new ProductRepository(databaseName);
             var product = new Product() { Id = 1, Name = "Default", Description = "Max" , Height =1, Length = 2, Weight = 15, Width = 54};
@@ -23,116 +23,94 @@ namespace ORM.Tests.Dapper
             Assert.NotNull(product);
         }
         [Fact]
-        public void Add_Null_ThrowsArgumentNullException()
+        public async Task Add_Null_ThrowsArgumentNullException()
         {
-            //using (var context = Helper.GetDbContext("NullContext"))
-            //{
-            //    var pRepo = new ProductRepository(context);
-            //    Action action = () => pRepo.Add(null);
-            //    Assert.Throws<ArgumentNullException>(action);
-            //}
+            string databaseName = "Data Source=AddProducts.sqlite";
+            var pRepo = new ProductRepository(databaseName);
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await pRepo.Add(null));
         }
         #endregion
         #region READ
         [Fact]
         public async Task GetAll_GetProducts_ReturnsAllProductsAsync()
         {
-            //using (var context = Helper.GetDbContext("GetAllProductsTestContext"))
-            //{
-            //    context.Add(new Product() { Id = 1, Name = "1", Description = "2", Height = 1});
-            //    context.Add(new Product() { Id = 2, Name = "2", Description = "3", Height = 2});
-            //    context.Add(new Product() { Id = 3, Name = "3", Description = "4", Height = 3});
-            //    context.SaveChanges();
-            //}
+            string databaseName = "Data Source=GetAllProducts.sqlite";
+            Helper.Setup(databaseName);
+            var pRepo = new ProductRepository(databaseName);
+            var product = new Product() { Id = 1, Name = "Default", Description = "Max", Height = 1, Length = 2, Weight = 15, Width = 54 };
+            var product2 = new Product() { Id = 2, Name = "Default2", Description = "Max", Height = 1, Length = 2, Weight = 15, Width = 54 };
+            var product3 = new Product() { Id = 3, Name = "Default3", Description = "Max", Height = 1, Length = 2, Weight = 15, Width = 54 };
 
-            //using (var context = Helper.GetDbContext("GetAllProductsTestContext"))
-            //{
-            //    var pRepo = new ProductRepository(context);
-            //    var products = await pRepo.GetAll();
-            //    Assert.Equal(3, products.Count);
-            //}
+            await pRepo.Add(product);
+            await pRepo.Add(product2);
+            await pRepo.Add(product3);
+
+            var products = await pRepo.GetAll();
+
+            Assert.Equal(3, products.Count);
         }
 
         [Fact]
         public async Task Get_GetProductById_ReturnsProductAsync()
         {
-            //using (var context = Helper.GetDbContext("GetProductByIdTestContext"))
-            //{
-            //    var product = new Product() { Id = 1, Name = "1", Description = "2", Height = 1 };
-            //    context.Add(product);
-            //    context.SaveChanges();
-            //}
+            string databaseName = "Data Source=GetProductById.sqlite";
+            Helper.Setup(databaseName);
+            var pRepo = new ProductRepository(databaseName);
+            var product = new Product() { Id = 1, Name = "Default", Description = "Max", Height = 1, Length = 2, Weight = 15, Width = 54 };
+            await pRepo.Add(product);
 
-            //using (var context = Helper.GetDbContext("GetProductByIdTestContext"))
-            //{
-            //    var pRepo = new ProductRepository(context);
-            //    var product = await pRepo.GetById(1);
-            //    Assert.NotNull(product);
-            //}
+            product = await pRepo.GetById(1);
+
+            Assert.NotNull(product);
         }
         #endregion
         #region UPDATE
         [Fact]
         public async Task Update_Product_ReturnsUpdatedProductAsync()
         {
-            //using (var context = Helper.GetDbContext("UpdateProductTestContext"))
-            //{
-            //    context.Add(new Product() { Id = 1, Name = "Product", Description = "Description" });
-            //    context.SaveChanges();
-            //}
+            string databaseName = "Data Source=UpdateProduct.sqlite";
+            Helper.Setup(databaseName);
+            var pRepo = new ProductRepository(databaseName);
+            var product = new Product() { Id = 1, Name = "Default", Description = "NotNull description", Height = 1, Length = 2, Weight = 15, Width = 54 };
+            await pRepo.Add(product);
 
-            //using (var context = Helper.GetDbContext("UpdateProductTestContext"))
-            //{
-            //    var pRepo = new ProductRepository(context);
-            //    var productToUpdate = await pRepo.GetById(1);
+            product = await pRepo.GetById(1);
+            product.Description = null;
+            await pRepo.Save(product);
 
-            //    productToUpdate.Description = null;
-            //    await pRepo.Save(productToUpdate);
-
-            //    productToUpdate = await pRepo.GetById(1);
-            //    Assert.Null(productToUpdate.Description);
-            //}
+            product = await pRepo.GetById(1);
+            Assert.Null(product.Description);
         }
         [Fact]
-        public void Update_Null_ThrowsArgumentNullException()
+        public async Task Update_Null_ThrowsArgumentNullExceptionAsync()
         {
-            //using (var context = Helper.GetDbContext("UpdateProductNullTestContext"))
-            //{
-            //    var pRepo = new ProductRepository(context);
-            //    Action action = () => pRepo.Save(null);
-            //    Assert.Throws<ArgumentNullException>(action);
-            //}
+            string databaseName = "Data Source=UpdateNullProduct.sqlite";
+            var pRepo = new ProductRepository(databaseName);
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await pRepo.Save(null));
         }
         #endregion
         #region DELETE
         [Fact]
         public async Task Delete_Product_ReturnsTrueAsync()
         {
-            //using (var context = Helper.GetDbContext("DeleteProductTestContext"))
-            //{
-            //    context.Add(new Product() { Id = 1, Name = "Product", Description = "Description" });
-            //    context.SaveChanges();
-            //}
+            string databaseName = "Data Source=DeleteProduct.sqlite";
+            Helper.Setup(databaseName);
+            var pRepo = new ProductRepository(databaseName);
+            var product = new Product() { Id = 1, Name = "Default", Description = "NotNull description", Height = 1, Length = 2, Weight = 15, Width = 54 };
+            await pRepo.Add(product);
 
-            //using (var context = Helper.GetDbContext("DeleteProductTestContext"))
-            //{
-            //    var pRepo = new ProductRepository(context);
-            //    await pRepo.Delete(1);
+            await pRepo.Delete(1);
 
-            //    var product = await pRepo.GetById(1);
-            //    Assert.Null(product);
-            //}
+            product = await pRepo.GetById(1);
+            Assert.Null(product);
         }
 
         [Fact]
-        public void Delete_Null_ThrowsArgumentNullException()
+        public async Task Delete_Null_ThrowsArgumentNullExceptionAsync()
         {
-            //using (var context = Helper.GetDbContext("DeleteProductNullTestContext"))
-            //{
-            //    var pRepo = new ProductRepository(context);
-            //    Action action = () => pRepo.Delete(1);
-            //    Assert.Throws<ArgumentNullException>(action);
-            //}
+            string databaseName = "Data Source=UpdateNullProduct.sqlite";
+            var pRepo = new ProductRepository(databaseName);
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await pRepo.Delete(1));
         }
         #endregion
     }

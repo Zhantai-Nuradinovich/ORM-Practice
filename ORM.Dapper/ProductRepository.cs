@@ -23,11 +23,19 @@ namespace ORM.Dapper
 
         public async Task Add(Product item)
         {
+            if (item == null)
+                throw new ArgumentNullException();
+
             string sqlProductInsert = "INSERT INTO Products (Name, Description, Weight, Height, Width, Length) " +
                                             "Values (@Name, @Description, @Weight, @Height, @Width, @Length);";
 
             using (var connection = new SqliteConnection(_databaseName))
                 await connection.ExecuteAsync(sqlProductInsert, item);
+        }
+
+        public Task Delete(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public Task Delete(Product item)
@@ -40,9 +48,15 @@ namespace ORM.Dapper
             throw new NotImplementedException();
         }
 
-        public Task<List<Product>> GetAll()
+        public async Task<List<Product>> GetAll()
         {
-            throw new NotImplementedException();
+            string sqlProductSelect = "SELECT * FROM Products;";
+
+            using (var connection = new SqliteConnection(_databaseName))
+            {
+                var products = await connection.QueryAsync<Product>(sqlProductSelect);
+                return products.ToList();
+            }
         }
 
         public async Task<Product> GetById(int id)
@@ -58,6 +72,9 @@ namespace ORM.Dapper
 
         public Task Save(Product item)
         {
+            if (item == null)
+                throw new ArgumentNullException();
+
             throw new NotImplementedException();
         }
     }
