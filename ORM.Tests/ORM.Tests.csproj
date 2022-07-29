@@ -24,8 +24,4 @@
     <ProjectReference Include="..\ORM\ORM.EF.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dapper\" />
-  </ItemGroup>
-
 </Project>
