@@ -21,7 +21,7 @@ namespace ORM.EF
             return base.Add(Item);
         }
 
-        public Task<bool> Delete(int id)
+        public Task Delete(int id)
         {
             var order = GetById(id).Result;
             if (order == null)
@@ -37,7 +37,7 @@ namespace ORM.EF
             await Context.SaveChangesAsync();
         }
 
-        public override Task<bool> Save(Order Item)
+        public override Task Save(Order Item)
         {
             if (Item == null)
                 throw new ArgumentNullException();

@@ -12,8 +12,8 @@ namespace ORM.EF
         Task<List<T>> GetAll();
         Task<T> GetById(int id);
         Task<List<T>> Get(Expression<Func<T, bool>> predicate);
-        Task<bool> Save(T item);
+        Task Save(T item);
         Task Add(T item);
-        Task<bool> Delete(T item);
+        Task Delete(T item);
     }
 }

@@ -24,11 +24,10 @@ namespace ORM.EF
             await Context.SaveChangesAsync();
         }
 
-        public virtual async Task<bool> Delete(T item)
+        public virtual async Task Delete(T item)
         {
             Context.Remove(item);
-            var result = await Context.SaveChangesAsync();
-            return result > 0;
+            await Context.SaveChangesAsync();
         }
 
         public virtual async Task<List<T>> Get(Expression<Func<T, bool>> predicate)
@@ -46,11 +45,10 @@ namespace ORM.EF
             return await Context.Set<T>().FindAsync(Id);
         }
 
-        public virtual async Task<bool> Save(T Item)
+        public virtual async Task Save(T Item)
         {
             Context.Update(Item);
-            var result = await Context.SaveChangesAsync();
-            return result > 0;
+            await Context.SaveChangesAsync();
         }
     }
 }
