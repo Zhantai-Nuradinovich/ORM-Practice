@@ -107,7 +107,7 @@ namespace ORM.Tests.EF
         #endregion
         #region DELETE
         [Fact]
-        public async Task Delete_Product_ReturnsTrueAsync()
+        public async Task Delete_Product_ReturnsNullAfterSelectAsync()
         {
             using (var context = Helper.GetDbContext("DeleteProductTestContext"))
             {

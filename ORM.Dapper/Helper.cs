@@ -16,7 +16,13 @@ namespace ORM.Dapper
             var table = connection.Query<string>("SELECT name FROM sqlite_master WHERE type='table' AND (name = 'Products' OR name = 'Orders');");
             var tableName = table.FirstOrDefault();
             if (!string.IsNullOrEmpty(tableName) && (tableName == "Products" || tableName == "Orders"))
+            {
+                string deleteFromProducts = "Delete from Products;";
+                string deleteFromOrders = "Delete from Orders;";
+                connection.Execute(deleteFromProducts);
+                connection.Execute(deleteFromOrders);
                 return;
+            }
 
             string productsCreateQuery = "Create Table Products (" +
                 "Id INTEGER NOT NULL PRIMARY KEY," +

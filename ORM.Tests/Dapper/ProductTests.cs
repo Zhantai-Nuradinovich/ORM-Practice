@@ -91,7 +91,7 @@ namespace ORM.Tests.Dapper
         #endregion
         #region DELETE
         [Fact]
-        public async Task Delete_Product_ReturnsTrueAsync()
+        public async Task Delete_Product_ReturnsNullAfterSelectAsync()
         {
             string databaseName = "Data Source=DeleteProduct.sqlite";
             Helper.Setup(databaseName);
@@ -108,9 +108,10 @@ namespace ORM.Tests.Dapper
         [Fact]
         public async Task Delete_Null_ThrowsArgumentNullExceptionAsync()
         {
-            string databaseName = "Data Source=UpdateNullProduct.sqlite";
+            string databaseName = "Data Source=DeleteNullProduct.sqlite";
+            Helper.Setup(databaseName);
             var pRepo = new ProductRepository(databaseName);
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await pRepo.Delete(1));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await pRepo.Delete(1));
         }
         #endregion
     }
