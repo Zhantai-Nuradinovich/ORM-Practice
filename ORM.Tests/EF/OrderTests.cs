@@ -23,14 +23,10 @@ namespace ORM.Tests.EF
                 var product = new Product() { Id = 1, Name =  "Default", Description = "Max"};
                 var order = new Order() { Id = 1, ProductId = 1, Status = (byte)Status.InProgress, CreatedDate = DateTime.Now, UpdatedDate = DateTime.Now };
 
-                await pRepo.Add(product);
-                await oRepo.Add(order);
-            }
+                await pRepo.AddAsync(product);
+                await oRepo.AddAsync(order);
 
-            using (var context = Helper.GetDbContext("AddOrderContext"))
-            {
-                var oRepo = new OrderRepository(context);
-                var orderInserted = await oRepo.GetById(1);
+                var orderInserted = await oRepo.GetByIdAsync(1);
                 Assert.NotNull(orderInserted);
             }
         }
@@ -40,8 +36,7 @@ namespace ORM.Tests.EF
             using (var context = Helper.GetDbContext("NullContext"))
             {
                 var oRepo = new OrderRepository(context);
-                Action action = () => oRepo.Add(null);
-                Assert.Throws<ArgumentNullException>(action);
+                Assert.ThrowsAsync<ArgumentNullException>(async () => await oRepo.AddAsync(null));
             }
         }
         #endregion
@@ -53,12 +48,10 @@ namespace ORM.Tests.EF
             {
                 context.Add(new Order() { Id = 1, CreatedDate = new DateTime(2022, 03, 21), UpdatedDate = DateTime.Now, ProductId = 1, Status = (byte)Status.Loading });
                 context.SaveChanges();
-            }
 
-            using (var context = Helper.GetDbContext("GetOrderByIdTestContext"))
-            {
                 var oRepo = new OrderRepository(context);
-                var order = await oRepo.GetById(1);
+                var order = await oRepo.GetByIdAsync(1);
+
                 Assert.NotNull(order);
             }
         }
@@ -71,12 +64,10 @@ namespace ORM.Tests.EF
                 context.Add(new Order() { Id = 1, CreatedDate = new DateTime(2022, 03, 21), Status = (byte)Status.Loading, UpdatedDate = DateTime.Now, ProductId = 1 });
                 context.Add(new Order() { Id = 2, CreatedDate = new DateTime(2022, 01, 22), Status = (byte)Status.Arrived, UpdatedDate = DateTime.Now, ProductId = 1 });
                 context.SaveChanges();
-            }
 
-            using (var context = Helper.GetDbContext("GetAllFilteredOrdersTestContext"))
-            {
                 var oRepo = new OrderRepository(context);
-                var orders = await oRepo.Get(x => x.Status == (byte)Status.Arrived && x.CreatedDate.Day > 20);
+                var orders = await oRepo.GetAsync(x => x.Status == (byte)Status.Arrived && x.CreatedDate.Day > 20);
+
                 Assert.Single(orders);
             }
         }
@@ -90,17 +81,14 @@ namespace ORM.Tests.EF
                 context.Add(new Product() { Id = 1, Name = "Product", Description = "Description"});
                 context.Add(new Order() { Id = 1,  ProductId = 1, Status = (byte)Status.InProgress});
                 await context.SaveChangesAsync();
-            }
 
-            using (var context = Helper.GetDbContext("UpdateOrderTestContext"))
-            {
                 var oRepo = new OrderRepository(context);
-                var orderToUpdate = await oRepo.GetById(1);
+                var orderToUpdate = await oRepo.GetByIdAsync(1);
 
                 orderToUpdate.Status = (byte)Status.Done;
-                await oRepo.Save(orderToUpdate);
+                await oRepo.SaveAsync(orderToUpdate);
 
-                orderToUpdate = await oRepo.GetById(1);
+                orderToUpdate = await oRepo.GetByIdAsync(1);
                 Assert.Equal((byte)Status.Done, orderToUpdate.Status);
             }
         }
@@ -110,7 +98,7 @@ namespace ORM.Tests.EF
             using (var context = Helper.GetDbContext("UpdateOrderNullTestContext"))
             {
                 var oRepo = new OrderRepository(context);
-                Action action = () => oRepo.Save(null);
+                Action action = () => oRepo.SaveAsync(null);
                 Assert.Throws<ArgumentNullException>(action);
             }
         }
@@ -124,14 +112,11 @@ namespace ORM.Tests.EF
                 context.Add(new Product() { Id = 1, Name = "Product", Description = "Description" });
                 context.Add(new Order() { Id = 1, ProductId = 1, Status = (byte)Status.InProgress });
                 await context.SaveChangesAsync();
-            }
 
-            using (var context = Helper.GetDbContext("DeleteOrderTestContext"))
-            {
                 var oRepo = new OrderRepository(context);
-                await oRepo.Delete(1);
+                await oRepo.DeleteAsync(1);
 
-                var order = await oRepo.GetById(1);
+                var order = await oRepo.GetByIdAsync(1);
                 Assert.Null(order);
             }
         }
@@ -142,8 +127,7 @@ namespace ORM.Tests.EF
             using (var context = Helper.GetDbContext("DeleteOrderNullTestContext"))
             {
                 var oRepo = new OrderRepository(context);
-                Action action = () => oRepo.Delete(1);
-                Assert.Throws<ArgumentNullException>(action);
+                Assert.ThrowsAsync<ArgumentNullException>(async () => await oRepo.DeleteAsync(1));
             }
         }
 
@@ -157,14 +141,11 @@ namespace ORM.Tests.EF
                 context.Add(new Order() { Id = 2, ProductId = 1, Status = (byte)Status.InProgress });
                 context.Add(new Order() { Id = 3, ProductId = 1, Status = (byte)Status.InProgress });
                 await context.SaveChangesAsync();
-            }
 
-            using (var context = Helper.GetDbContext("DeleteAllOrderTestContext"))
-            {
                 var oRepo = new OrderRepository(context);
-                await oRepo.DeleteAll(x => x.Status == (byte)Status.InProgress);
+                await oRepo.DeleteAllAsync(x => x.Status == (byte)Status.InProgress);
 
-                var orders = await oRepo.Get(x => x.Status == (byte)Status.InProgress);
+                var orders = await oRepo.GetAsync(x => x.Status == (byte)Status.InProgress);
                 Assert.Empty(orders);
             }
         }

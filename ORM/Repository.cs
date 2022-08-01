@@ -18,34 +18,39 @@ namespace ORM.EF
             Context = context;
         }
 
-        public virtual async Task Add(T Item)
+        public virtual async Task AddAsync(T Item)
         {
             Context.Add(Item);
             await Context.SaveChangesAsync();
         }
 
-        public virtual async Task Delete(T item)
+        public virtual async Task DeleteAsync(T item)
         {
             Context.Remove(item);
             await Context.SaveChangesAsync();
         }
 
-        public virtual async Task<List<T>> Get(Expression<Func<T, bool>> predicate)
+        public virtual async Task<List<T>> GetAsync(Expression<Func<T, bool>> predicate)
         {
             return await Context.Set<T>().AsNoTracking().Where(predicate).ToListAsync();
         }
 
-        public virtual async Task<List<T>> GetAll()
+        public virtual async Task<List<T>> GetAsTrackingAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await Context.Set<T>().Where(predicate).ToListAsync();
+        }
+
+        public virtual async Task<List<T>> GetAllAsync()
         {
             return await Context.Set<T>().AsNoTracking().ToListAsync();
         }
 
-        public virtual async Task<T> GetById(int Id)
+        public virtual async Task<T> GetByIdAsync(int Id)
         {
             return await Context.Set<T>().FindAsync(Id);
         }
 
-        public virtual async Task Save(T Item)
+        public virtual async Task SaveAsync(T Item)
         {
             Context.Update(Item);
             await Context.SaveChangesAsync();

@@ -21,7 +21,7 @@ namespace ORM.Dapper
             _databaseName = databaseName;
         }
 
-        public async Task Add(Product item)
+        public async Task AddAsync(Product item)
         {
             if (item == null)
                 throw new ArgumentNullException();
@@ -33,13 +33,13 @@ namespace ORM.Dapper
                 await connection.ExecuteAsync(sqlProductInsert, item);
         }
 
-        public async Task Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            var product = await GetById(id);
-            await Delete(product);
+            var product = await GetByIdAsync(id);
+            await DeleteAsync(product);
         }
 
-        public async Task Delete(Product item)
+        public async Task DeleteAsync(Product item)
         {
             if (item == null)
                 throw new InvalidOperationException("No entity found in Products table");
@@ -50,12 +50,12 @@ namespace ORM.Dapper
                 await connection.ExecuteAsync(sqlProductDelete, item);
         }
 
-        public Task<List<Product>> Get(Expression<Func<Product, bool>> predicate)//todo: segregate interface, unnecessary method
+        public Task<List<Product>> GetAsync(Expression<Func<Product, bool>> predicate)//todo: segregate interface, unnecessary method
         {
             throw new NotImplementedException();
         }
 
-        public async Task<List<Product>> GetAll()
+        public async Task<List<Product>> GetAllAsync()
         {
             string sqlProductsSelect = "SELECT * FROM Products;";
 
@@ -66,7 +66,7 @@ namespace ORM.Dapper
             }
         }
 
-        public async Task<Product> GetById(int id)
+        public async Task<Product> GetByIdAsync(int id)
         {
             string sqlProductSelectById = "SELECT * FROM Products WHERE Id = @Id;";
 
@@ -77,7 +77,7 @@ namespace ORM.Dapper
             }
         }
 
-        public async Task Save(Product item)
+        public async Task SaveAsync(Product item)
         {
             if (item == null)
                 throw new ArgumentNullException();

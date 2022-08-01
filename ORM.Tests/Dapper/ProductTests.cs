@@ -17,9 +17,9 @@ namespace ORM.Tests.Dapper
             var pRepo = new ProductRepository(databaseName);
             var product = new Product() { Id = 1, Name = "Default", Description = "Max" , Height =1, Length = 2, Weight = 15, Width = 54};
 
-            await pRepo.Add(product);
+            await pRepo.AddAsync(product);
 
-            product = await pRepo.GetById(1);
+            product = await pRepo.GetByIdAsync(1);
             Assert.NotNull(product);
         }
         [Fact]
@@ -27,7 +27,7 @@ namespace ORM.Tests.Dapper
         {
             string databaseName = "Data Source=AddProducts.sqlite";
             var pRepo = new ProductRepository(databaseName);
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await pRepo.Add(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await pRepo.AddAsync(null));
         }
         #endregion
         #region READ
@@ -41,11 +41,11 @@ namespace ORM.Tests.Dapper
             var product2 = new Product() { Id = 2, Name = "Default2", Description = "Max", Height = 1, Length = 2, Weight = 15, Width = 54 };
             var product3 = new Product() { Id = 3, Name = "Default3", Description = "Max", Height = 1, Length = 2, Weight = 15, Width = 54 };
 
-            await pRepo.Add(product);
-            await pRepo.Add(product2);
-            await pRepo.Add(product3);
+            await pRepo.AddAsync(product);
+            await pRepo.AddAsync(product2);
+            await pRepo.AddAsync(product3);
 
-            var products = await pRepo.GetAll();
+            var products = await pRepo.GetAllAsync();
 
             Assert.Equal(3, products.Count);
         }
@@ -57,9 +57,9 @@ namespace ORM.Tests.Dapper
             Helper.Setup(databaseName);
             var pRepo = new ProductRepository(databaseName);
             var product = new Product() { Id = 1, Name = "Default", Description = "Max", Height = 1, Length = 2, Weight = 15, Width = 54 };
-            await pRepo.Add(product);
+            await pRepo.AddAsync(product);
 
-            product = await pRepo.GetById(1);
+            product = await pRepo.GetByIdAsync(1);
 
             Assert.NotNull(product);
         }
@@ -72,13 +72,13 @@ namespace ORM.Tests.Dapper
             Helper.Setup(databaseName);
             var pRepo = new ProductRepository(databaseName);
             var product = new Product() { Id = 1, Name = "Default", Description = "NotNull description", Height = 1, Length = 2, Weight = 15, Width = 54 };
-            await pRepo.Add(product);
+            await pRepo.AddAsync(product);
 
-            product = await pRepo.GetById(1);
+            product = await pRepo.GetByIdAsync(1);
             product.Description = null;
-            await pRepo.Save(product);
+            await pRepo.SaveAsync(product);
 
-            product = await pRepo.GetById(1);
+            product = await pRepo.GetByIdAsync(1);
             Assert.Null(product.Description);
         }
         [Fact]
@@ -86,7 +86,7 @@ namespace ORM.Tests.Dapper
         {
             string databaseName = "Data Source=UpdateNullProduct.sqlite";
             var pRepo = new ProductRepository(databaseName);
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await pRepo.Save(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await pRepo.SaveAsync(null));
         }
         #endregion
         #region DELETE
@@ -97,11 +97,11 @@ namespace ORM.Tests.Dapper
             Helper.Setup(databaseName);
             var pRepo = new ProductRepository(databaseName);
             var product = new Product() { Id = 1, Name = "Default", Description = "NotNull description", Height = 1, Length = 2, Weight = 15, Width = 54 };
-            await pRepo.Add(product);
+            await pRepo.AddAsync(product);
 
-            await pRepo.Delete(1);
+            await pRepo.DeleteAsync(1);
 
-            product = await pRepo.GetById(1);
+            product = await pRepo.GetByIdAsync(1);
             Assert.Null(product);
         }
 
@@ -111,7 +111,7 @@ namespace ORM.Tests.Dapper
             string databaseName = "Data Source=DeleteNullProduct.sqlite";
             Helper.Setup(databaseName);
             var pRepo = new ProductRepository(databaseName);
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await pRepo.Delete(1));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await pRepo.DeleteAsync(1));
         }
         #endregion
     }

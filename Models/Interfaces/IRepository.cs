@@ -9,11 +9,11 @@ namespace Models.Interfaces
 {
     public interface IRepository<T> where T : Entity
     {
-        Task<List<T>> GetAll();
-        Task<T> GetById(int id);
-        Task<List<T>> Get(Expression<Func<T, bool>> predicate);
-        Task Save(T item);
-        Task Add(T item);
-        Task Delete(T item);
+        Task<List<T>> GetAllAsync();
+        Task<T> GetByIdAsync(int id);
+        Task<List<T>> GetAsync(Expression<Func<T, bool>> predicate);
+        Task SaveAsync(T item);
+        Task AddAsync(T item);
+        Task DeleteAsync(T item);
     }
 }

@@ -13,36 +13,36 @@ namespace ORM.EF
         public OrderRepository(ApplicationDbContext context) : base(context)
         { }
 
-        public override Task Add(Order Item)
+        public override Task AddAsync(Order Item)
         {
             if (Item == null)
                 throw new ArgumentNullException();
 
-            return base.Add(Item);
+            return base.AddAsync(Item);
         }
 
-        public Task Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            var order = GetById(id).Result;
+            var order = GetByIdAsync(id).Result;
             if (order == null)
                 throw new ArgumentNullException();
 
-            return base.Delete(order);
+            await base.DeleteAsync(order);
         }
 
-        public async Task DeleteAll(Expression<Func<Order, bool>> predicate)
+        public async Task DeleteAllAsync(Expression<Func<Order, bool>> predicate)
         {
-            var orders = await Get(predicate);
+            var orders = await GetAsTrackingAsync(predicate);
             Context.Orders.RemoveRange(orders);
             await Context.SaveChangesAsync();
         }
 
-        public override Task Save(Order Item)
+        public override Task SaveAsync(Order Item)
         {
             if (Item == null)
                 throw new ArgumentNullException();
             
-            return base.Save(Item);
+            return base.SaveAsync(Item);
         }
     }
 }

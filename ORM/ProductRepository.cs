@@ -13,28 +13,28 @@ namespace ORM.EF
         {
         }
 
-        public override Task Add(Product Item)
+        public override Task AddAsync(Product Item)
         {
             if (Item == null)
                 throw new ArgumentNullException();
 
-            return base.Add(Item);
+            return base.AddAsync(Item);
         }
-        public override Task Save(Product Item)
+        public override Task SaveAsync(Product Item)
         {
             if (Item == null)
                 throw new ArgumentNullException();
 
-            return base.Save(Item);
+            return base.SaveAsync(Item);
         }
 
-        public Task Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            var product = GetById(id).Result;
+            var product = GetByIdAsync(id).Result;
             if (product == null)
                 throw new ArgumentNullException();
 
-            return base.Delete(product);
+            await base.DeleteAsync(product);
         }
     }
 }

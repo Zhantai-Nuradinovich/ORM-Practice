@@ -17,9 +17,9 @@ namespace ORM.Tests.EF
                 var product = new Product() { Id = 1, Name = "Default", Description = "Max" };
                 var pRepo = new ProductRepository(context);
 
-                await pRepo.Add(product);
+                await pRepo.AddAsync(product);
 
-                product = await pRepo.GetById(1);
+                product = await pRepo.GetByIdAsync(1);
                 Assert.NotNull(product);
             }
         }
@@ -29,7 +29,7 @@ namespace ORM.Tests.EF
             using (var context = Helper.GetDbContext("NullContext"))
             {
                 var pRepo = new ProductRepository(context);
-                Action action = () => pRepo.Add(null);
+                Action action = () => pRepo.AddAsync(null);
                 Assert.Throws<ArgumentNullException>(action);
             }
         }
@@ -44,12 +44,10 @@ namespace ORM.Tests.EF
                 context.Add(new Product() { Id = 2, Name = "2", Description = "3", Height = 2});
                 context.Add(new Product() { Id = 3, Name = "3", Description = "4", Height = 3});
                 context.SaveChanges();
-            }
 
-            using (var context = Helper.GetDbContext("GetAllProductsTestContext"))
-            {
                 var pRepo = new ProductRepository(context);
-                var products = await pRepo.GetAll();
+                var products = await pRepo.GetAllAsync();
+
                 Assert.Equal(3, products.Count);
             }
         }
@@ -62,12 +60,10 @@ namespace ORM.Tests.EF
                 var product = new Product() { Id = 1, Name = "1", Description = "2", Height = 1 };
                 context.Add(product);
                 context.SaveChanges();
-            }
 
-            using (var context = Helper.GetDbContext("GetProductByIdTestContext"))
-            {
                 var pRepo = new ProductRepository(context);
-                var product = await pRepo.GetById(1);
+                product = await pRepo.GetByIdAsync(1);
+
                 Assert.NotNull(product);
             }
         }
@@ -80,17 +76,13 @@ namespace ORM.Tests.EF
             {
                 context.Add(new Product() { Id = 1, Name = "Product", Description = "Description" });
                 context.SaveChanges();
-            }
-
-            using (var context = Helper.GetDbContext("UpdateProductTestContext"))
-            {
                 var pRepo = new ProductRepository(context);
-                var productToUpdate = await pRepo.GetById(1);
+                var productToUpdate = await pRepo.GetByIdAsync(1);
 
                 productToUpdate.Description = null;
-                await pRepo.Save(productToUpdate);
+                await pRepo.SaveAsync(productToUpdate);
 
-                productToUpdate = await pRepo.GetById(1);
+                productToUpdate = await pRepo.GetByIdAsync(1);
                 Assert.Null(productToUpdate.Description);
             }
         }
@@ -100,7 +92,7 @@ namespace ORM.Tests.EF
             using (var context = Helper.GetDbContext("UpdateProductNullTestContext"))
             {
                 var pRepo = new ProductRepository(context);
-                Action action = () => pRepo.Save(null);
+                Action action = () => pRepo.SaveAsync(null);
                 Assert.Throws<ArgumentNullException>(action);
             }
         }
@@ -113,14 +105,11 @@ namespace ORM.Tests.EF
             {
                 context.Add(new Product() { Id = 1, Name = "Product", Description = "Description" });
                 context.SaveChanges();
-            }
 
-            using (var context = Helper.GetDbContext("DeleteProductTestContext"))
-            {
                 var pRepo = new ProductRepository(context);
-                await pRepo.Delete(1);
+                await pRepo.DeleteAsync(1);
 
-                var product = await pRepo.GetById(1);
+                var product = await pRepo.GetByIdAsync(1);
                 Assert.Null(product);
             }
         }
@@ -131,8 +120,7 @@ namespace ORM.Tests.EF
             using (var context = Helper.GetDbContext("DeleteProductNullTestContext"))
             {
                 var pRepo = new ProductRepository(context);
-                Action action = () => pRepo.Delete(1);
-                Assert.Throws<ArgumentNullException>(action);
+                Assert.ThrowsAsync<ArgumentNullException>(async () => await pRepo.DeleteAsync(1));
             }
         }
         #endregion
